@@ -8,7 +8,7 @@ typedef struct contacts
 	int index;
 	char first_name[15];
 	char last_name[15];
-	char mobile_number[10];
+	char mobile_number[11];
 	char emailId[50];
 }contacts;
 
@@ -29,8 +29,7 @@ void search_firstName(node *head);
 void search_lastName(node *head);
 void search_contactNumber(node *head);
 void search_emailId(node *head);
-/*void sort(node *head);
-void copy(node *str2, node *str1);*/
+void sort(node *head);
 void edit(node *head);
 void quit(node *head);
 node *insert(node *head, contacts x);
@@ -45,7 +44,7 @@ contacts read()
 	scanf("%s", x.first_name);
 	printf("Enter Last Name \n");
 	scanf("%s", x.last_name);
-	printf("Enter Mobile Name \n");
+	printf("Enter Mobile Number \n");
 	scanf("%s", x.mobile_number);
 	printf("Enter Email ID \n");
 	scanf("%s", x.emailId);
@@ -141,26 +140,7 @@ node *insert(node *head, contacts x)
 		p->prev=q;
 	}
 
-	//sort(head);
-
-	FILE *filePointer;
-	filePointer = fopen("contacts.txt", "w") ;
-
-	if (head != NULL)
-	{
-		for (p=head; p!=NULL; p=p->next)
-		{
-			contacts x = p->data;
-			fprintf(filePointer, "%d. %s \t %s \t %s \t %s \n", x.index, x.first_name, x.last_name, x.mobile_number, x.emailId);
-		}
-	}
-
-	fclose(filePointer);
-	
-	printf(" \nContact Added Successfully \n\n");
-	printf("\n Press any key for the Main Menu\n");
-	getch();
-	main_menu(head);
+	sort(head);
 }
 	
 void displayAll(node *head)
@@ -291,25 +271,7 @@ void edit(node *head)
 			printf("Wrong Index\n");
 	}
 
-	//sort(head);
-
-	FILE *filePointer;
-	filePointer = fopen("contacts.txt", "w") ;
-
-	if (head != NULL)
-	{
-		for (p=head; p!=NULL; p=p->next)
-		{
-			contacts x = p->data;
-			fprintf(filePointer, "%d. %s \t %s \t %s \t %s \n", x.index, x.first_name, x.last_name, x.mobile_number, x.emailId);
-		}
-	}
-
-	fclose(filePointer);
-
-	printf("\n Press any key for the Main Menu\n");
-	getch();
-	main_menu(head);
+	sort(head);
 }
 
 void search_menu(node *head)
@@ -360,6 +322,8 @@ void search_firstName(node *head)
 	if(head == NULL)
 	{
 		printf("\n No Contacts");
+		printf("\n Press any key for the Main Menu\n");
+		getch();
 		main_menu(head);
 	}
 	else
@@ -368,6 +332,8 @@ void search_firstName(node *head)
 			if (strcmp(p->data.first_name, firstName) == 1)
 			{
 				printf("Contact Not Found\n");
+				printf("\n Press any key for the Main Menu\n");
+				getch();
 				main_menu(head);
 			}
 		contacts x = p->data;
@@ -396,6 +362,8 @@ void search_lastName(node *head)
 			if (strcmp(p->data.last_name, lastName) == 1)
 			{
 				printf("Contact Not Found\n");
+				printf("\n Press any key for the Main Menu\n");
+				getch();
 				main_menu(head);
 			}
 		contacts x = p->data;
@@ -424,6 +392,8 @@ void search_contactNumber(node *head)
 			if (strcmp(p->data.mobile_number, contactNumber) == 1)
 			{
 				printf("Contact Not Found\n");
+				printf("\n Press any key for the Main Menu\n");
+				getch();
 				main_menu(head);
 			}
 		contacts x = p->data;
@@ -438,7 +408,7 @@ void search_contactNumber(node *head)
 void search_emailId(node *head)
 {
 	node *p;
-	printf("Enter Contact Number:\n");
+	printf("Enter Email ID:\n");
 	char emailId[50];
 	scanf("%s", emailId);
 	if(head == NULL)
@@ -452,6 +422,8 @@ void search_emailId(node *head)
 			if (strcmp(p->data.emailId, emailId) == 1)
 			{
 				printf("Contact Not Found\n");
+				printf("\n Press any key for the Main Menu\n");
+				getch();
 				main_menu(head);
 			}
 		contacts x = p->data;
@@ -463,36 +435,51 @@ void search_emailId(node *head)
 	main_menu(head);
 }
 
-/*void sort(node *head)
+void sort(node *head)
 {
 	node *p, *q, *temp;
+	int x,y;
 	temp = (node *)malloc(sizeof(node));
-
 	if (head->next!=NULL)
 	{
 		for (p=head; p!=NULL; p=p->next)
 		{
-			for (q=head; q->next==NULL; q=q->next)
+			for (q=head->next; q!=NULL; q=q->next)
 			{
 				if (strcmp(p->data.first_name, q->data.first_name) > 0)
 				{
-					copy(temp, p);
-					copy(p, q);
-					copy(q, temp);
+					x = p->data.index;
+					y = q->data.index;
+					temp->data = p->data;
+					p->data = q->data;
+					q->data = temp->data;
+					q->data.index = y;
+					p->data.index = x;
+					free(temp);
 				}
 			}
 		}
 	}
-}
 
-void copy(node *str2, node *str1)
-{	
-	strcmp(str2->data.index, str1->data.index);
-	strcmp(str2->data.first_name, str1->data.first_name);
-	strcmp(str2->data.last_name, str1->data.last_name);
-	strcmp(str2->data.mobile_number, str1->data.mobile_number);
-	strcmp(str2->data.emailId, str1->data.emailId);
-}*/
+	FILE *filePointer;
+	filePointer = fopen("contacts.txt", "w") ;
+
+	if (head != NULL)
+	{
+		for (p=head; p!=NULL; p=p->next)
+		{
+			contacts x = p->data;
+			fprintf(filePointer, "%d. %s \t %s \t %s \t %s \n", x.index, x.first_name, x.last_name, x.mobile_number, x.emailId);
+		}
+	}
+
+	fclose(filePointer);
+	
+	printf(" \nContact Added Successfully \n\n");
+	printf("\n Press any key for the Main Menu\n");
+	getch();
+	main_menu(head);
+}
 
 void quit(node *head)
 {
